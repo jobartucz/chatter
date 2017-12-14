@@ -42,12 +42,14 @@ finally:
 
 # this function should get messages from the database and display them
 def text_entry():
+    username = input("Please enter your username")
     newmessage = ""
     while (newmessage != "exit"):
         newmessage = input("> ")
+        # get the current datetime
 
         # this is where you'll have to insert the message into the database
-    
+        # insert (username, datetime, newmessage) into database
 
 # this function gets the messages from the database
 def get_messages():
@@ -55,7 +57,9 @@ def get_messages():
     howlong = 10 # run for 10 seconds
     while (howlong > 0):
         # this is where you'll get the messages from the database since the last check and print them
-
+        # select * from chats
+        # print (datetime, username, text)
+        
         # set the time of last check to now, since we just checked them
         time_of_last_check = datetime.datetime
         
