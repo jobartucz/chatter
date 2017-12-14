@@ -1,5 +1,5 @@
 import pymysql.cursors # database
-from threading import Thread # multithreading
+from threading import Thread, Event # multithreading
 import time
 import datetime
 
@@ -41,35 +41,35 @@ finally:
 
 
 # this function should get messages from the database and display them
-def text_entry():
-    username = input("Please enter your username")
+def text_entry(arg1, stop_event):
     newmessage = ""
     while (newmessage != "exit"):
         newmessage = input("> ")
-        # get the current datetime
 
         # this is where you'll have to insert the message into the database
-        # insert (username, datetime, newmessage) into database
+    stop_event.set()
 
 # this function gets the messages from the database
-def get_messages():
-    # time_of_last_check = datetime from a long time ago to get all messages
-    howlong = 10 # run for 10 seconds
-    while (howlong > 0):
+def get_messages(arg1, stop_event):
+    time_of_last_check = datetime.datetime(1975, 4, 3, 1, 1) # set the last time check to a long time ago
+    # print(time_of_last_check.strftime("%A, %d. %B %Y %I:%M%p"))
+    
+    while (not stop_event.is_set()):
         # this is where you'll get the messages from the database since the last check and print them
-        # select * from chats
-        # print (datetime, username, text)
-        
+
         # set the time of last check to now, since we just checked them
-        time_of_last_check = datetime.datetime
+        time_of_last_check = datetime.datetime.today()
+        # print(time_of_last_check.strftime("%A, %d. %B %Y %I:%M%p"))
         
         # sleep for a little bit
         time.sleep(1)
-        howlong -= 1
 
+# this is the threading "event" we'll use to stop reading the database when the user types "exit"
+t2_stop = Event()
 
-t1 = Thread(target=text_entry)
-t2 = Thread(target=get_messages)
+# start the threads
+t1 = Thread(target=text_entry, args=(1, t2_stop))
+t2 = Thread(target=get_messages, args=(2, t2_stop))
 t1.start()
 t2.start()
 
@@ -78,4 +78,3 @@ t2.start()
 # The main program will wait for each thread to finish before exiting.
 t1.join()
 t2.join()
-
